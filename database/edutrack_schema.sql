@@ -1,18 +1,11 @@
--- ============================================================
---  EduTrack v2 — Script de Base de Datos MySQL
---  Ejecutar este archivo ANTES de correr el backend
--- ============================================================
-
--- Crear y seleccionar la base de datos
 CREATE DATABASE IF NOT EXISTS edutrack
   CHARACTER SET utf8mb4
   COLLATE utf8mb4_unicode_ci;
 
 USE edutrack;
 
--- ============================================================
+
 --  TABLA: users
--- ============================================================
 CREATE TABLE IF NOT EXISTS users (
   id         INT            NOT NULL AUTO_INCREMENT,
   nombre     VARCHAR(100)   NOT NULL,
@@ -27,9 +20,8 @@ CREATE TABLE IF NOT EXISTS users (
   UNIQUE KEY uq_users_email (email)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ============================================================
+
 --  TABLA: estudiantes
--- ============================================================
 CREATE TABLE IF NOT EXISTS estudiantes (
   id               INT          NOT NULL AUTO_INCREMENT,
   nombre           VARCHAR(100) NOT NULL,
@@ -51,9 +43,8 @@ CREATE TABLE IF NOT EXISTS estudiantes (
     ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ============================================================
+
 --  TABLA: materias
--- ============================================================
 CREATE TABLE IF NOT EXISTS materias (
   id         INT          NOT NULL AUTO_INCREMENT,
   nombre     VARCHAR(100) NOT NULL,
@@ -72,9 +63,8 @@ CREATE TABLE IF NOT EXISTS materias (
   CONSTRAINT chk_materias_creditos CHECK (creditos BETWEEN 1 AND 6)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ============================================================
+
 --  TABLA: asistencias
--- ============================================================
 CREATE TABLE IF NOT EXISTS asistencias (
   id               INT  NOT NULL AUTO_INCREMENT,
   estudianteId     INT  NOT NULL,
@@ -97,9 +87,8 @@ CREATE TABLE IF NOT EXISTS asistencias (
     ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ============================================================
+
 --  TABLA: calificaciones
--- ============================================================
 CREATE TABLE IF NOT EXISTS calificaciones (
   id             INT     NOT NULL AUTO_INCREMENT,
   estudianteId   INT     NOT NULL,
@@ -128,13 +117,6 @@ CREATE TABLE IF NOT EXISTS calificaciones (
   CONSTRAINT chk_final    CHECK (final    IS NULL OR final    BETWEEN 0 AND 100)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ============================================================
---  DATOS DE PRUEBA (seed)
---  Contraseñas hasheadas con bcrypt (salt 10):
---    Admin123!      → hash incluido abajo
---    Profesor123!   → hash incluido abajo
---    Estudiante123! → hash incluido abajo
--- ============================================================
 
 INSERT INTO users (nombre, apellido, email, password, rol, activo) VALUES
 ('Admin',   'Sistema',    'admin@edutrack.do',       '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin',      1),
@@ -142,9 +124,6 @@ INSERT INTO users (nombre, apellido, email, password, rol, activo) VALUES
 ('Carlos',  'Pérez',      'cperez@edutrack.do',      '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'profesor',   1),
 ('Juan',    'Martínez',   'jmartinez@edutrack.do',   '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'estudiante', 1);
 
--- NOTA: Los hashes de arriba son placeholders de Laravel.
--- Usa el seed de Node.js para insertar usuarios con hashes bcrypt reales:
---   cd backend && node src/utils/seed.js
 
 INSERT INTO materias (nombre, codigo, creditos, grado, profesorId, activa) VALUES
 ('Matemáticas',        'MAT101', 4, '1ro Bachillerato', 2, 1),
@@ -210,9 +189,8 @@ INSERT INTO calificaciones (estudianteId, materiaId, periodo, parcial1, parcial2
 (3, 4, '2025-1', 78, 82, 79, 80, 79.75, 1, 1),
 (4, 4, '2025-1', 88, 92, 85, 90, 88.75, 1, 1);
 
--- ============================================================
+
 --  VERIFICACIÓN FINAL
--- ============================================================
 SELECT 'users'          AS tabla, COUNT(*) AS registros FROM users
 UNION ALL
 SELECT 'estudiantes',  COUNT(*) FROM estudiantes
